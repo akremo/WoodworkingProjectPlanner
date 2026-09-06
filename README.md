@@ -21,7 +21,7 @@ Every woodworker knows the problem: scattered notes, parts left unplanned, and l
 - **Cut visualization** — an interactive on-screen layout of boards/sheets showing each part, the saw kerf, and the leftover waste.
 - **Photo → board-ft estimation** with two modes:
   - **Mode A — "what did it cost"**: import a photo of a finished project and get a board-ft estimate of what it consumed.
-  - **Mode B — part extraction**: load a photo, annotate part boundaries on screen (plus an optional scale reference), and derive a part list with board-ft. Uses NiceGUI's built-in image annotation.
+  - **Mode B — part extraction**: load a photo, annotate part boundaries on screen (plus an optional scale reference), and derive a part list with board-ft. 
   - Designed so a future ML step can detect part boundaries automatically, plugging in without rewriting Mode B.
 
 ## How it works
