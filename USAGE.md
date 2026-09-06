@@ -4,25 +4,9 @@
 
 ## Planned installation
 
-Requires Python 3.11+.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt    # deps include: nicegui, image handling, visualization
-```
-
-Intended dependency areas (final list not yet chosen): NiceGUI for the web UI, image loading/annotation support, and layout rendering for the visualizer.
 
 ## Running it
 
-Launch the web app:
-
-```bash
-cutplan
-```
-
-Open `http://localhost:8080` in a desktop browser. To use it on a phone, run it with the host bind or make sure both devices are on the same network, then open `http://<your-computer-ip>:8080` in the phone's browser.
 
 ## Planned input formats
 
@@ -54,9 +38,9 @@ scrap,cherry cutout,20,8,1,1,0
 - `type`: `board` (sold by board-ft, width/thickness matter) or `sheet`.
 - The tool computes board-ft for `board` entries and reports usage against it.
 
-## Web interface
+## Interface
 
-The whole tool is one web app organized into four views. No command line needed.
+The whole tool is one app organized into four views. No command line needed.
 
 - **Cut List** — enter/edit parts (description, quantity, dimensions, grain, stock assignment); import/export via CSV.
 - **Stock** — manage boards and sheets (type, name, dimensions, qty, price).
