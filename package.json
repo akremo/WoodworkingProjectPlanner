@@ -1,0 +1,15 @@
+{
+  "name": "cutlist-planner-and-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev:mobile": "pnpm --filter cutlist-planner-mobile start",
+    "export:web": "pnpm --filter cutlist-planner-mobile export:web",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @clpv/core test"
+  }
+}

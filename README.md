@@ -2,7 +2,7 @@
 
 > Plan, optimize, and visualize cut lists for woodworking — from an idea or a photo.
 
-**Status: pre-alpha / specification only.** No code has been written yet. This document describes the intended design and roadmap. See [USAGE.md](USAGE.md) for the intended workflow and instructions.
+**Status: pre-alpha, built toward the spec.** Phase 1 (cut-list & stock tracking) is live in the mobile app; the Phase 2 optimization engine ships in `packages/core` with tests. The roadmap below is the contract being built toward. See [USAGE.md](USAGE.md) for instructions.
 
 ## Motivation
 
@@ -14,15 +14,15 @@ Every woodworker knows the problem: scattered notes, parts left unplanned, and l
 
 ## Features
 
-- **Cut-list tracking** — catalog parts: description, quantity, dimensions, grain direction, and which stock they come from.
-- **Waste optimization** — computes low-waste layouts for two kinds of stock:
-  - **Rough lumber** sold by the board-foot (L × W × T).
-  - **Sheet goods** (plywood, MDF, panel stock) laid out on rectangular panels.
-- **Cut visualization** — an interactive on-screen layout of boards/sheets showing each part, the saw kerf, and the leftover waste.
-- **Photo → board-ft estimation** with two modes:
-  - **Mode A — "what did it cost"**: import a photo of a finished project and get a board-ft estimate of what it consumed.
-  - **Mode B — part extraction**: load a photo, annotate part boundaries on screen (plus an optional scale reference), and derive a part list with board-ft. 
-  - Designed so a future ML step can detect part boundaries automatically, plugging in without rewriting Mode B.
+- **Cut-list tracking** — catalog parts: description, quantity, dimensions, grain direction, wood type, and cost per board-foot. **Live in the app**: editable rows, device-persisted, CSV export.
+- **Waste optimization** — placement engine in `packages/core`:
+  - **Sheet goods** (plywood, MDF, panel stock): 2D maxrects packing with kerf margins.
+  - **Rough lumber** sold by the board-foot (L × W × T): rip-and-crosscut lane packing.
+  - Both are kerf- and grain-aware (see [USAGE.md](USAGE.md#optimization-engine)). The UI wiring lands with Phase 3 visualization.
+- **Cut visualization** — interactive on-screen layout of boards/sheets showing each part (tap for details), the saw kerf (the gaps between parts), and the leftover waste (offcuts shaded). Live against your Part List/Stock with a kerf setting. Panel/board rendering on screen; export with labeled cuts is a Phase 3 refinement.
+- **Photo → board-ft estimation**:
+  - **Mode B — part extraction**: *(live)* take or upload a photo, drag a box around each part to identify it, then trace angled edges by pulling each corner dot independently (parts don't have to be rectangles), and edit each part's dimensions (name, L×W×T, qty, grain) inline with running board-ft. One tap sends the traced parts to the Part List.
+  - Designed so a future ML step can detect part boundaries automatically, plugging in without rewriting Mode B. Mode A ("what did it cost") is still planned.
 
 ## How it works
 
@@ -30,25 +30,35 @@ Everything lives in one app; there are no separate CLI commands.
 
 1. **Catalog parts** — enter your cut list in the UI (or start from Mode B photo annotation).
 2. **Add stock** — list the boards and sheets you have or plan to buy.
-3. **Optimize** — the tool places parts onto stock, minimizing waste and honoring grain direction and kerf.
-4. **Visualize** — review the interactive layout on screen and export it with cuts and dimensions labeled.
-5. **Estimate (photos)** — snap a photo of an existing project with your phone and let the tool estimate its board-ft consumption.
+3. **Optimize** — the optimizer (`optimizeCutList` in `packages/core`) places parts onto stock, minimizing waste and honoring grain direction and kerf.
+4. **Visualize** — the Layout view renders the result live: tappable part diagrams, kerf gaps, shaded offcuts, and waste summary.
+5. **Estimate (photos)** — snap a photo of a finished project; Mode B traces parts into the Part List, and Mode A will estimate board-ft consumption.
 
 ## Roadmap
 
-| Phase | Scope                                                                    | Status |
-| ----- | ------------------------------------------------------------------------ | ------- |
-| 1 | Cut-list & stock tracking (CSV in/out)                                   | planned |
-| 2 | Optimization engine (board-ft nester + sheet nester, kerf & grain aware) | planned |
-| 3 | Interactive visualization (layout diagrams on screen)                    | planned |
-| 4 | Photo modes A & B (semi-automatic annotation)                            | planned |
-| 5 | Automatic part detection via ML (plugs into Mode B)                      | future |
+| Phase | Scope                                                                    | Status      |
+| ----- | ------------------------------------------------------------------------ | ----------- |
+| 1     | Cut-list & stock tracking (CSV in/out)                                   | complete    |
+| 2     | Optimization engine (board-ft nester + sheet nester, kerf & grain aware) | complete    |
+| 3     | Interactive visualization (layout diagrams on screen)                    | complete    |
+| 4     | Photo modes A & B (semi-automatic annotation)                            | in progress |
+| 5     | Automatic part detection via ML (plugs into Mode B)                      | future      |
 
 ## Tech
 
+Monorepo (pnpm workspaces, `nodeLinker: hoisted`):
 
+- `packages/core` — pure TypeScript, no React Native/Expo imports. Domain models, CSV in/out, units + board-ft math, cutting nesters (`nesting.ts`: sheet maxrects + board rip/crosscut, kerf & grain aware, planing & resawing of boards into thinner layers), photo math. Tested with Vitest (runs on the host).
+- `apps/mobile` — Expo SDK 57 + Expo Router + NativeWind v4 (Tailwind). One UI, four views (`src/app/{index,stock,layout,photo}.tsx`). Part List and Stock are live editors persisted via AsyncStorage (`usePersistedState`, shared in-memory store → real-time cross-tab updates); CSV export via expo-file-system + expo-sharing (share sheet on native, download on web); photo tracing via expo-image-picker. Rendering/annotation canvas via react-native-skia (planned with the ML/photo-refinement phases). Camera, file picker, and image picker via Expo modules.
+- `apps/desktop` — planned Tauri shell hosting the mobile app's `expo export -p web` output for native Windows/Linux installers. Not created yet.
 
 ## Decision history
 
+- **One app, no CLI** (per spec): mobile + desktop share a single UI codebase and the pure-TS core.
+- **Mobile-native first** (chosen over PWA): Expo targets iOS/Android; the same UI's web export is later wrapped by Tauri for Windows/Linux desktop.
+- **Core shared across platforms**: all math lives in `packages/core` (environment-agnostic, Vitest-tested); the app is a thin consumer. Keeps the future ML photo step pluggable per spec.
+- **pnpm 12 hard constraints**: `nodeLinker: hoisted` + `allowBuilds` (esbuild) in `pnpm-workspace.yaml`. Changing anything there = regenerate lockfile/node_modules.
+- **NativeWind pinned**: `react-native-css-interop@0.2.6` kept as a direct dep, version-locked to NativeWind's requirement, because pnpm-laid-out Metro resolution needs it resolvable from the app.
+- **Nester modeling**: sheets use effective part sizes inflated by kerf inside a sheet inflated by one kerf (adjacent parts always keep a saw-kerf gap); boards are treated as strip stock ripped into lanes (minimum rip width set by the first piece in the lane) and crosscut inside a lane. Constants/tuning live in `packages/core/src/nesting.ts`.
 
 See [USAGE.md](USAGE.md) for installation and usage.
