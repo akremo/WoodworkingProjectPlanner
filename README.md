@@ -52,6 +52,51 @@ Monorepo (pnpm workspaces, `nodeLinker: hoisted`):
 - `apps/mobile` — Expo SDK 57 + Expo Router + NativeWind v4 (Tailwind). One UI, four views (`src/app/{index,stock,layout,photo}.tsx`). Part List and Stock are live editors persisted via AsyncStorage (`usePersistedState`, shared in-memory store → real-time cross-tab updates); CSV export via expo-file-system + expo-sharing (share sheet on native, download on web); photo tracing via expo-image-picker. Rendering/annotation canvas via react-native-skia (planned with the ML/photo-refinement phases). Camera, file picker, and image picker via Expo modules.
 - `apps/desktop` — Tauri 2 shell hosting the mobile app's `expo export -p web` output (`apps/mobile/dist`) for native Linux/Windows/macOS installers. `src-tauri/tauri.conf.json` points `frontendDist` at the web export; `pnpm build:desktop` re-exports the web bundle then builds `.deb`/`.rpm`/`.AppImage`.
 
+## Building
+
+### Prerequisites
+
+- **Node ≥ 20** and **pnpm ≥ 12** (lockfile is `pnpm-lock.yaml`; do not use npm/yarn).
+- **Rust toolchain** (only for the desktop app) — install via [rustup](https://rustup.rs/):
+  ```sh
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+- **Linux (Fedora) system libs** for Tauri (desktop only) — Debian/Ubuntu equivalents exist; see the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/):
+  ```sh
+  sudo dnf install webkit2gtk4.1-devel librsvg2-devel libappindicator-gtk3-devel gtk3-devel openssl-devel patchelf
+  ```
+
+### Install & verify
+
+```sh
+pnpm install           # workspace deps (hoisted node_modules)
+pnpm test              # Vitest suite in packages/core (30 tests)
+pnpm -r typecheck      # core + app type checks
+```
+
+### Mobile app (Expo)
+
+```sh
+cd apps/mobile
+pnpm start       # Metro dev server → scan the QR to run on a device
+pnpm android     # or Launch Android emulator
+```
+
+### Desktop app (Tauri)
+
+```sh
+pnpm dev:desktop     # re-export the web bundle, open the Tauri dev window
+pnpm build:desktop   # re-export the web bundle, build release + installers
+```
+
+Release artifacts land in `apps/desktop/src-tauri/target/release/bundle/`:
+
+- `deb/CutList Planner_*.deb` and `rpm/CutList Planner-*.rpm` — Linux installers
+- `appimage/CutList Planner_*.AppImage` — portable Linux app (bundling needs FUSE on the display; deb/rpm build fine headless)
+- `cutlist-planner-desktop` — the raw binary
+
+The desktop app is a native shell around the mobile web export: `pnpm build:desktop` re-runs `expo export -p web` into `apps/mobile/dist`, which `src-tauri/tauri.conf.json` (`frontendDist`) points at.
+
 ## Decision history
 
 - **One app, no CLI** (per spec): mobile + desktop share a single UI codebase and the pure-TS core.
