@@ -217,20 +217,20 @@ export default function PhotoScreen() {
   const bdftTotal = boxes.filter((b) => b.length > 0 && b.width > 0).reduce((sum, b) => sum + b.qty * boardFeet(b.length, b.width, b.thickness), 0);
 
   return (
-    <ScrollView className="flex-1 bg-stone-50" keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20 }}>
+    <ScrollView className="flex-1 bg-stone-50 dark:bg-stone-950" keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20 }}>
       <View className="flex-row items-baseline justify-between">
-        <Text className="text-2xl font-bold text-stone-900">Photo → Parts</Text>
-        <Text className="text-sm text-stone-500">{boxes.length} part{boxes.length === 1 ? "" : "s"}</Text>
+        <Text className="text-2xl font-bold text-stone-900 dark:text-stone-100">Photo → Parts</Text>
+        <Text className="text-sm text-stone-500 dark:text-stone-400">{boxes.length} part{boxes.length === 1 ? "" : "s"}</Text>
       </View>
-      <Text className="mt-1 text-sm text-stone-500">Take or upload a photo, then drag a box around each part. Tap a box to select it — drag the top bar to move it, or pull any corner dot to reshape that corner on its own.</Text>
+      <Text className="mt-1 text-sm text-stone-500 dark:text-stone-400">Take or upload a photo, then drag a box around each part. Tap a box to select it — drag the top bar to move it, or pull any corner dot to reshape that corner on its own.</Text>
 
       {!uri ? (
         <View className="mt-4 flex-row gap-2">
-          <Pressable onPress={takePhoto} className="flex-1 items-center rounded-xl border border-stone-300 bg-white py-3">
-            <Text className="text-sm font-medium text-stone-700">Take a photo</Text>
+          <Pressable onPress={takePhoto} className="flex-1 items-center rounded-xl border border-stone-300 bg-white py-3 dark:border-stone-700 dark:bg-stone-900">
+            <Text className="text-sm font-medium text-stone-700 dark:text-stone-300">Take a photo</Text>
           </Pressable>
-          <Pressable onPress={pickFromLibrary} className="flex-1 items-center rounded-xl border border-stone-300 bg-white py-3">
-            <Text className="text-sm font-medium text-stone-700">Choose from library</Text>
+          <Pressable onPress={pickFromLibrary} className="flex-1 items-center rounded-xl border border-stone-300 bg-white py-3 dark:border-stone-700 dark:bg-stone-900">
+            <Text className="text-sm font-medium text-stone-700 dark:text-stone-300">Choose from library</Text>
           </Pressable>
         </View>
       ) : (
@@ -273,41 +273,41 @@ export default function PhotoScreen() {
               </View>
             </View>
           ) : (
-            <View className="mt-4 rounded-xl bg-white p-4"><Text className="text-stone-500">Loading photo…</Text></View>
+            <View className="mt-4 rounded-xl bg-white p-4 dark:bg-stone-900"><Text className="text-stone-500 dark:text-stone-400">Loading photo…</Text></View>
           )}
 
           <View className="mt-3 flex-row gap-2">
-            <Pressable onPress={pickFromLibrary} className="flex-1 items-center rounded-lg border border-stone-300 bg-white py-2">
-              <Text className="text-xs font-medium text-stone-700">Choose</Text>
+            <Pressable onPress={pickFromLibrary} className="flex-1 items-center rounded-lg border border-stone-300 bg-white py-2 dark:border-stone-700 dark:bg-stone-900">
+              <Text className="text-xs font-medium text-stone-700 dark:text-stone-300">Choose</Text>
             </Pressable>
-            <Pressable onPress={takePhoto} className="flex-1 items-center rounded-lg border border-stone-300 bg-white py-2">
-              <Text className="text-xs font-medium text-stone-700">Retake</Text>
+            <Pressable onPress={takePhoto} className="flex-1 items-center rounded-lg border border-stone-300 bg-white py-2 dark:border-stone-700 dark:bg-stone-900">
+              <Text className="text-xs font-medium text-stone-700 dark:text-stone-300">Retake</Text>
             </Pressable>
-            <Pressable onPress={() => { setUri(null); setBoxes([]); setSelectedId(null); setImgDims(null); }} className="flex-1 items-center rounded-lg border border-red-200 bg-red-50 py-2">
-              <Text className="text-xs font-medium text-red-600">Clear</Text>
+            <Pressable onPress={() => { setUri(null); setBoxes([]); setSelectedId(null); setImgDims(null); }} className="flex-1 items-center rounded-lg border border-red-200 bg-red-50 py-2 dark:border-red-800/60 dark:bg-red-950/40">
+              <Text className="text-xs font-medium text-red-600 dark:text-red-400">Clear</Text>
             </Pressable>
           </View>
 
           {boxes.length > 0 && (
             <>
               <View className="mt-5 flex-row items-baseline justify-between">
-                <Text className="text-lg font-bold text-stone-900">Traced parts</Text>
-                <Text className="text-sm text-stone-500">{boxes.length} box{boxes.length === 1 ? "" : "es"}</Text>
+                <Text className="text-lg font-bold text-stone-900 dark:text-stone-100">Traced parts</Text>
+                <Text className="text-sm text-stone-500 dark:text-stone-400">{boxes.length} box{boxes.length === 1 ? "" : "es"}</Text>
               </View>
-              <Text className="mt-1 text-sm text-stone-500">Edit dimensions below — comments update live. Tap a row to find/select that box on the photo.</Text>
+              <Text className="mt-1 text-sm text-stone-500 dark:text-stone-400">Edit dimensions below — comments update live. Tap a row to find/select that box on the photo.</Text>
 
               {boxes.map((b, idx) => {
                 const bb = bounds(b.corners);
                 return (
-                <View key={b.id} className={`mt-4 rounded-xl p-4 shadow-sm ${selectedId === b.id ? "bg-amber-50 ring-2 ring-amber-400" : "bg-white"}`}>
+                <View key={b.id} className={`mt-4 rounded-xl p-4 shadow-sm ${selectedId === b.id ? "bg-amber-50 ring-2 ring-amber-400 dark:bg-amber-900/30 dark:ring-amber-500" : "bg-white dark:bg-stone-900"}`}>
                   <Pressable onPress={() => setSelectedId(b.id)}>
                     <View className="flex-row items-center">
-                      <Text className="mr-2 text-xs font-semibold text-stone-400">#{idx + 1}</Text>
+                      <Text className="mr-2 text-xs font-semibold text-stone-400 dark:text-stone-500">#{idx + 1}</Text>
                       <View className="flex-1">
                         <TextCell label="Name" value={b.name} onChange={(name) => updateBox(b.id, { name })} />
                       </View>
-                      <Pressable onPress={() => removeBox(b.id)} className="ml-3 self-end rounded-lg border border-red-200 bg-red-50 px-3 py-2">
-                        <Text className="text-xs font-medium text-red-600">Remove</Text>
+                      <Pressable onPress={() => removeBox(b.id)} className="ml-3 self-end rounded-lg border border-red-200 bg-red-50 px-3 py-2 dark:border-red-800/60 dark:bg-red-950/40">
+                        <Text className="text-xs font-medium text-red-600 dark:text-red-400">Remove</Text>
                       </Pressable>
                     </View>
                   </Pressable>
@@ -321,12 +321,12 @@ export default function PhotoScreen() {
 
                   <View className="mt-3">
                     <ChipSelector label="Grain" options={GRAIN_OPTIONS} value={b.grain} onChange={(grain) => updateBox(b.id, { grain })} />
-                    <Text className="mt-2 text-xs text-stone-500">
+                    <Text className="mt-2 text-xs text-stone-500 dark:text-stone-400">
                       {(b.qty * boardFeet(b.length, b.width, b.thickness)).toFixed(2)} bd-ft {b.length > 0 && b.width > 0 ? "per line" : "· add dims to count"}
                     </Text>
                   </View>
 
-                  <Text className="mt-2 text-xs text-stone-400">
+                  <Text className="mt-2 text-xs text-stone-400 dark:text-stone-500">
                     Area {((bb.x1 - bb.x0) * 100).toFixed(0)}×{((bb.y1 - bb.y0) * 100).toFixed(0)}% of photo {selectedId === b.id ? "· selected on photo" : ""}
                   </Text>
                 </View>
@@ -336,24 +336,24 @@ export default function PhotoScreen() {
           )}
 
           {boxes.length > 0 && (
-            <View className="mt-4 rounded-xl bg-amber-100 p-4">
+            <View className="mt-4 rounded-xl bg-amber-100 p-4 dark:bg-amber-900/30">
               <View className="flex-row justify-between">
-                <Text className="font-semibold text-stone-900">Annotated board-ft</Text>
-                <Text className="font-semibold text-amber-800">{bdftTotal.toFixed(2)} bd-ft</Text>
+                <Text className="font-semibold text-stone-900 dark:text-stone-100">Annotated board-ft</Text>
+                <Text className="font-semibold text-amber-800 dark:text-amber-300">{bdftTotal.toFixed(2)} bd-ft</Text>
               </View>
-              <Text className="mt-1 text-xs text-stone-500">Select a box, drag its top bar to move it, or pull any of its four corner dots independently to match an angled edge, then edit its dims in the list above.</Text>
+              <Text className="mt-1 text-xs text-stone-500 dark:text-stone-400">Select a box, drag its top bar to move it, or pull any of its four corner dots independently to match an angled edge, then edit its dims in the list above.</Text>
             </View>
           )}
 
-          <Pressable onPress={addToPartList} disabled={boxes.length === 0} className={`mt-4 items-center rounded-xl py-3 ${boxes.length === 0 ? "bg-stone-200" : "bg-amber-600"}`}>
-            <Text className={`font-semibold ${boxes.length === 0 ? "text-stone-400" : "text-white"}`}>Send traced parts to Part List</Text>
+          <Pressable onPress={addToPartList} disabled={boxes.length === 0} className={`mt-4 items-center rounded-xl py-3 ${boxes.length === 0 ? "bg-stone-200 dark:bg-stone-800" : "bg-amber-600 dark:bg-amber-500"}`}>
+            <Text className={`font-semibold ${boxes.length === 0 ? "text-stone-400 dark:text-stone-500" : "text-white"}`}>Send traced parts to Part List</Text>
           </Pressable>
         </>
       )}
 
       {flash && (
-        <View className="mt-3 rounded-lg border border-stone-300 bg-white p-3">
-          <Text className="text-sm text-stone-700">{flash}</Text>
+        <View className="mt-3 rounded-lg border border-stone-300 bg-white p-3 dark:border-stone-700 dark:bg-stone-900">
+          <Text className="text-sm text-stone-700 dark:text-stone-300">{flash}</Text>
         </View>
       )}
     </ScrollView>

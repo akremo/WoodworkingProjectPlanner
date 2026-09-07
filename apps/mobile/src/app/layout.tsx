@@ -66,30 +66,30 @@ export default function LayoutScreen() {
   const result = useMemo(() => optimizeCutList({ parts, stock, kerf, resawKerf }), [parts, stock, kerf, resawKerf]);
 
   const loaded = partsLoaded && stockLoaded;
-  if (!loaded) return <View className="flex-1 bg-stone-50 p-4"><Text className="text-stone-500">Loading…</Text></View>;
+  if (!loaded) return <View className="flex-1 bg-stone-50 p-4 dark:bg-stone-950"><Text className="text-stone-500 dark:text-stone-400">Loading…</Text></View>;
 
   const legend = [...new Map(result.layouts.flatMap((l) => l.parts.map((p) => [partColorKey(p), p.partName] as const))).entries()];
 
   return (
-    <ScrollView className="flex-1 bg-stone-50" contentContainerStyle={{ padding: 16 }}>
+    <ScrollView className="flex-1 bg-stone-50 dark:bg-stone-950" contentContainerStyle={{ padding: 16 }}>
       <View className="flex-row items-baseline justify-between">
-        <Text className="text-2xl font-bold text-stone-900">Layout</Text>
+        <Text className="text-2xl font-bold text-stone-900 dark:text-stone-100">Layout</Text>
         <View className="flex-row">
           <View className="mr-3 items-end">
-            <Text className="mb-1 text-xs text-stone-500">Table saw kerf (in)</Text>
+            <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">Table saw kerf (in)</Text>
             <NumberInput value={kerf} onChange={(v) => setSettings((prev) => ({ ...prev, kerf: v }))} />
           </View>
           <View className="items-end">
-            <Text className="mb-1 text-xs text-stone-500">Band saw kerf (in)</Text>
+            <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">Band saw kerf (in)</Text>
             <NumberInput value={resawKerf} onChange={(v) => setSettings((prev) => ({ ...prev, resawKerf: v }))} />
           </View>
         </View>
       </View>
-      <Text className="mt-1 text-sm text-stone-500">Live layout of your Part List on your Stock. Tap a part for details.</Text>
+      <Text className="mt-1 text-sm text-stone-500 dark:text-stone-400">Live layout of your Part List on your Stock. Tap a part for details.</Text>
 
       {parts.length === 0 || stock.length === 0 ? (
-        <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <Text className="text-stone-600">Add parts to the Part List and items to Stock first — the optimizer runs on those.</Text>
+        <View className="mt-4 rounded-xl bg-white p-4 shadow-sm dark:bg-stone-900">
+          <Text className="text-stone-600 dark:text-stone-300">Add parts to the Part List and items to Stock first — the optimizer runs on those.</Text>
         </View>
       ) : (
         <View className="mt-2">
@@ -100,14 +100,14 @@ export default function LayoutScreen() {
           ))}
 
           {result.layouts.length === 0 && (
-            <Text className="mt-2 text-sm text-stone-500">No stock matched the parts. Check thickness values or add sheets.</Text>
+            <Text className="mt-2 text-sm text-stone-500 dark:text-stone-400">No stock matched the parts. Check thickness values or add sheets.</Text>
           )}
 
           {result.unplaced.length > 0 && (
-            <View className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
-              <Text className="font-semibold text-red-700">Could not place</Text>
+            <View className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800/60 dark:bg-red-950/40">
+              <Text className="font-semibold text-red-700 dark:text-red-400">Could not place</Text>
               {result.unplaced.map((u) => (
-                <Text key={`${u.partId}-${u.quantity}`} className="mt-1 text-sm text-red-600">
+                <Text key={`${u.partId}-${u.quantity}`} className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {u.partName} ×{u.quantity} — {u.reason === "no_stock" ? "no stock thick enough (and no matching sheet)" : "does not fit any stock"}
                 </Text>
               ))}
@@ -115,13 +115,13 @@ export default function LayoutScreen() {
           )}
 
           {legend.length > 0 && (
-            <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
-              <Text className="text-xs font-semibold uppercase text-stone-400">Legend</Text>
+            <View className="mt-4 rounded-xl bg-white p-4 shadow-sm dark:bg-stone-900">
+              <Text className="text-xs font-semibold uppercase text-stone-400 dark:text-stone-500">Legend</Text>
               <View className="mt-2 flex-row flex-wrap">
               {legend.map(([key, name]) => (
                 <View key={key} className="mr-3 mb-1 flex-row items-center">
                   <View className="mr-1 h-3 w-3 rounded-sm" style={{ backgroundColor: colorFor(key) }} />
-                  <Text className="text-xs text-stone-600">{name}</Text>
+                  <Text className="text-xs text-stone-600 dark:text-stone-300">{name}</Text>
                 </View>
               ))}
             </View>
@@ -147,23 +147,23 @@ function Summary({ result, kerf, resawKerf }: { result: ReturnType<typeof optimi
   if (stats.resaw.boardsResawn > 0) conversions.push(`${stats.resaw.boardsResawn} board${stats.resaw.boardsResawn === 1 ? "" : "s"} resawn → ${stats.resaw.layersCreated} layers`);
   if (stats.plane.boardsPlaned > 0) conversions.push(`${stats.plane.boardsPlaned} board${stats.plane.boardsPlaned === 1 ? "" : "s"} planed`);
   return (
-    <View className="rounded-xl bg-amber-100 p-4">
+    <View className="rounded-xl bg-amber-100 p-4 dark:bg-amber-900/30">
       <View className="flex-row justify-between">
-        <Text className="text-sm font-semibold text-stone-700">Parts placed</Text>
-        <Text className="text-sm font-semibold text-stone-900">{stats.partsPlaced} / {stats.partsPlaced + stats.partsUnplaced}</Text>
+        <Text className="text-sm font-semibold text-stone-700 dark:text-stone-300">Parts placed</Text>
+        <Text className="text-sm font-semibold text-stone-900 dark:text-stone-100">{stats.partsPlaced} / {stats.partsPlaced + stats.partsUnplaced}</Text>
       </View>
       <View className="mt-1 flex-row justify-between">
-        <Text className="text-sm font-semibold text-stone-700">Board stock ({fmt(stats.board.boughtBdFt)} bd-ft bought)</Text>
-        <Text className="text-sm font-semibold text-amber-800">{fmt(stats.board.usedBdFt)} used · {fmt(stats.board.wastePercent)}% waste</Text>
+        <Text className="text-sm font-semibold text-stone-700 dark:text-stone-300">Board stock ({fmt(stats.board.boughtBdFt)} bd-ft bought)</Text>
+        <Text className="text-sm font-semibold text-amber-800 dark:text-amber-300">{fmt(stats.board.usedBdFt)} used · {fmt(stats.board.wastePercent)}% waste</Text>
       </View>
       <View className="mt-1 flex-row justify-between">
-        <Text className="text-sm font-semibold text-stone-700">Sheet stock</Text>
-        <Text className="text-sm font-semibold text-amber-800">{fmt(stats.sheet.usedArea)} in² used · {fmt(stats.sheet.wastePercent)}% waste</Text>
+        <Text className="text-sm font-semibold text-stone-700 dark:text-stone-300">Sheet stock</Text>
+        <Text className="text-sm font-semibold text-amber-800 dark:text-amber-300">{fmt(stats.sheet.usedArea)} in² used · {fmt(stats.sheet.wastePercent)}% waste</Text>
       </View>
       {conversions.length > 0 && (
-        <Text className="mt-2 text-xs font-medium text-amber-900">{conversions.join(" · ")} — boards can plane down or resaw into thinner layers</Text>
+        <Text className="mt-2 text-xs font-medium text-amber-900 dark:text-amber-200">{conversions.join(" · ")} — boards can plane down or resaw into thinner layers</Text>
       )}
-      <Text className="mt-1 text-xs text-stone-500">Table saw kerf {fmt(kerf)}″ · band saw kerf {fmt(resawKerf)}″ · gaps between parts (and between resaw layers) are saw cuts; offcuts are shaded.</Text>
+      <Text className="mt-1 text-xs text-stone-500 dark:text-stone-400">Table saw kerf {fmt(kerf)}″ · band saw kerf {fmt(resawKerf)}″ · gaps between parts (and between resaw layers) are saw cuts; offcuts are shaded.</Text>
     </View>
   );
 }
@@ -173,13 +173,13 @@ function DiagramCard({ layout, scale, onSelect }: { layout: StockLayout; scale: 
   const len = stock.length * scale;
   const wid = stock.width * scale;
   return (
-    <View className="mt-4 rounded-xl bg-white p-3 shadow-sm">
+    <View className="mt-4 rounded-xl bg-white p-3 shadow-sm dark:bg-stone-900">
       <View className="flex-row justify-between">
-        <Text className="text-sm font-semibold text-stone-800">{stock.name}</Text>
-        <Text className="text-xs text-stone-500">{fmt(stock.length)}×{fmt(stock.width)}″ {stock.type} · {fmt(stock.thickness)}″</Text>
+        <Text className="text-sm font-semibold text-stone-800 dark:text-stone-200">{stock.name}</Text>
+        <Text className="text-xs text-stone-500 dark:text-stone-400">{fmt(stock.length)}×{fmt(stock.width)}″ {stock.type} · {fmt(stock.thickness)}″</Text>
       </View>
       {layout.sourceMode !== "exact" && (
-        <Text className="mt-0.5 text-xs font-medium text-amber-700">
+        <Text className="mt-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
           {layout.sourceMode === "plane" ? (
             <>planed from {fmt(layout.sourceStock.thickness)}″ stock</>
           ) : (
@@ -187,9 +187,9 @@ function DiagramCard({ layout, scale, onSelect }: { layout: StockLayout; scale: 
           )}
         </Text>
       )}
-      <View className="mt-2 overflow-hidden rounded border border-stone-300 bg-stone-100" style={{ width: len, height: wid }}>
+      <View className="mt-2 overflow-hidden rounded border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" style={{ width: len, height: wid }}>
         {layout.offcuts.map((o, i) => (
-          <View key={`off-${i}`} className="bg-stone-200/70" style={{ position: "absolute", left: o.x * scale, top: o.y * scale, width: o.width * scale, height: o.height * scale }} />
+          <View key={`off-${i}`} className="bg-stone-200/70 dark:bg-stone-950/60" style={{ position: "absolute", left: o.x * scale, top: o.y * scale, width: o.width * scale, height: o.height * scale }} />
         ))}
         {layout.parts.map((p) => (
           <Pressable
@@ -208,7 +208,7 @@ function DiagramCard({ layout, scale, onSelect }: { layout: StockLayout; scale: 
           </Pressable>
         ))}
       </View>
-      <Text className="mt-1 text-xs text-stone-500">
+      <Text className="mt-1 text-xs text-stone-500 dark:text-stone-400">
         {layout.parts.length} piece{layout.parts.length === 1 ? "" : "s"} · {layout.offcuts.length} offcut region{layout.offcuts.length === 1 ? "" : "s"}
       </Text>
     </View>
@@ -222,11 +222,11 @@ function PartModal({ part, stockName, onClose }: { part: PlacedPart | null; stoc
   return (
     <Modal transparent animationType="fade" visible={!!part} onRequestClose={onClose}>
       <Pressable className="flex-1 items-center justify-center bg-black/40 p-6" onPress={onClose}>
-        <Pressable className="w-full rounded-xl bg-white p-4 shadow-lg" onPress={(e) => e.stopPropagation()}>
+        <Pressable className="w-full rounded-xl bg-white p-4 shadow-lg dark:bg-stone-900" onPress={(e) => e.stopPropagation()}>
           <View className="flex-row items-center justify-between">
-            <Text className="text-lg font-bold text-stone-900">{part.partName}</Text>
-            <Pressable onPress={onClose} className="rounded-lg bg-stone-100 px-2 py-1">
-              <Text className="text-sm text-stone-600">Close</Text>
+            <Text className="text-lg font-bold text-stone-900 dark:text-stone-100">{part.partName}</Text>
+            <Pressable onPress={onClose} className="rounded-lg bg-stone-100 px-2 py-1 dark:bg-stone-800">
+              <Text className="text-sm text-stone-600 dark:text-stone-300">Close</Text>
             </Pressable>
           </View>
           <View className="mt-3 gap-1">
@@ -246,8 +246,8 @@ function PartModal({ part, stockName, onClose }: { part: PlacedPart | null; stoc
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <View className="flex-row justify-between">
-      <Text className="text-sm text-stone-500">{label}</Text>
-      <Text className="text-sm font-medium text-stone-900">{value}</Text>
+      <Text className="text-sm text-stone-500 dark:text-stone-400">{label}</Text>
+      <Text className="text-sm font-medium text-stone-900 dark:text-stone-100">{value}</Text>
     </View>
   );
 }

@@ -25,7 +25,7 @@ function subscribe(key: string, fn: Listener): () => void {
 
 function writeCache(key: string, value: unknown): void {
   cache.set(key, value);
-  publish(key);
+  queueMicrotask(() => publish(key));
 }
 
 /** AsyncStorage-backed state shared in-memory across every screen that uses the

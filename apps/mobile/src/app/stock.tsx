@@ -40,28 +40,28 @@ export default function StockScreen() {
   const lineValue = (s: Stock) => (s.type === "sheet" ? 0 : s.qty * boardFeet(s.length, s.width, s.thickness) * s.costPerBdFt);
   const totalValue = stock.reduce((sum, s) => sum + lineValue(s), 0);
 
-  if (!loaded) return <View className="flex-1 bg-stone-50 p-4"><Text className="text-stone-500">Loading…</Text></View>;
+  if (!loaded) return <View className="flex-1 bg-stone-50 p-4 dark:bg-stone-950"><Text className="text-stone-500 dark:text-stone-400">Loading…</Text></View>;
 
   return (
-    <ScrollView className="flex-1 bg-stone-50" keyboardShouldPersistTaps="handled">
+    <ScrollView className="flex-1 bg-stone-50 dark:bg-stone-950" keyboardShouldPersistTaps="handled">
       <View className="p-4">
         <View className="flex-row items-baseline justify-between">
-          <Text className="text-2xl font-bold text-stone-900">Stock</Text>
-          <Text className="text-sm text-stone-500">{stock.length} item{stock.length === 1 ? "" : "s"}</Text>
+          <Text className="text-2xl font-bold text-stone-900 dark:text-stone-100">Stock</Text>
+          <Text className="text-sm text-stone-500 dark:text-stone-400">{stock.length} item{stock.length === 1 ? "" : "s"}</Text>
         </View>
-        <Text className="mt-1 text-sm text-stone-500">Editable — saved on this device.</Text>
+        <Text className="mt-1 text-sm text-stone-500 dark:text-stone-400">Editable — saved on this device.</Text>
 
         {stock.map((s, index) => (
-          <View key={s.id} className="mt-4 rounded-xl bg-white p-4 shadow-sm">
+          <View key={s.id} className="mt-4 rounded-xl bg-white p-4 shadow-sm dark:bg-stone-900">
             <View className="flex-row items-center">
-              <Text className="mr-2 text-xs font-semibold text-stone-400">#{index + 1}</Text>
+              <Text className="mr-2 text-xs font-semibold text-stone-400 dark:text-stone-500">#{index + 1}</Text>
               <View className="flex-1">
                 <TextCell label="Name" value={s.name} onChange={(name) => update(s.id, { name })} />
               </View>
               <Pressable
                 onPress={() => remove(s.id)}
-                className="ml-3 self-end rounded-lg border border-red-200 bg-red-50 px-3 py-2">
-                <Text className="text-xs font-medium text-red-600">Remove</Text>
+                className="ml-3 self-end rounded-lg border border-red-200 bg-red-50 px-3 py-2 dark:border-red-800/60 dark:bg-red-950/40">
+                <Text className="text-xs font-medium text-red-600 dark:text-red-400">Remove</Text>
               </Pressable>
             </View>
 
@@ -78,23 +78,23 @@ export default function StockScreen() {
 
             <View className="mt-3 flex-row items-end gap-2">
               <View className="flex-1">
-                <Text className="mb-1 text-xs text-stone-500">Wood</Text>
+                <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">Wood</Text>
                 <TextInput
-                  className="h-9 rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm text-stone-900"
+                  className="h-9 rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm text-stone-900 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-100"
                   value={s.woodType}
                   placeholder="e.g. walnut"
                   onChangeText={(woodTypeFinal) => update(s.id, { woodType: woodTypeFinal })}
                 />
               </View>
               <View>
-                <Text className="mb-1 text-right text-xs text-stone-500">$/bd-ft</Text>
+                <Text className="mb-1 text-right text-xs text-stone-500 dark:text-stone-400">$/bd-ft</Text>
                 <NumberInput value={s.costPerBdFt} onChange={(costPerBdFt) => update(s.id, { costPerBdFt })} />
               </View>
             </View>
 
             <View className="mt-3">
               <NumberCell label="Price (per item)" value={s.price} onChange={(price) => update(s.id, { price })} />
-              <Text className="mt-1 text-xs text-stone-500">
+              <Text className="mt-1 text-xs text-stone-500 dark:text-stone-400">
                 {s.type === "sheet"
                   ? `${linePrice(s).toFixed(2)} total`
                   : `${boardFeet(s.length, s.width, s.thickness).toFixed(2)} bd-ft per item · $${lineValue(s).toFixed(2)} value`}
@@ -103,22 +103,22 @@ export default function StockScreen() {
           </View>
         ))}
 
-        <Pressable onPress={add} className="mt-4 items-center rounded-xl border border-dashed border-stone-400 py-3">
-          <Text className="font-medium text-stone-600">+ Add stock</Text>
+        <Pressable onPress={add} className="mt-4 items-center rounded-xl border border-dashed border-stone-400 py-3 dark:border-stone-600">
+          <Text className="font-medium text-stone-600 dark:text-stone-300">+ Add stock</Text>
         </Pressable>
 
-        <View className="mt-4 rounded-xl bg-amber-100 p-4">
+        <View className="mt-4 rounded-xl bg-amber-100 p-4 dark:bg-amber-900/30">
           <View className="flex-row justify-between">
-            <Text className="font-semibold text-stone-900">Board total</Text>
-            <Text className="font-semibold text-amber-800">{boardFtd.toFixed(2)} bd-ft</Text>
+            <Text className="font-semibold text-stone-900 dark:text-stone-100">Board total</Text>
+            <Text className="font-semibold text-amber-800 dark:text-amber-300">{boardFtd.toFixed(2)} bd-ft</Text>
           </View>
           <View className="mt-1 flex-row justify-between">
-            <Text className="font-semibold text-stone-900">Total price (by $/bd-ft)</Text>
-            <Text className="font-semibold text-amber-800">${totalValue.toFixed(2)}</Text>
+            <Text className="font-semibold text-stone-900 dark:text-stone-100">Total price (by $/bd-ft)</Text>
+            <Text className="font-semibold text-amber-800 dark:text-amber-300">${totalValue.toFixed(2)}</Text>
           </View>
           <View className="mt-1 flex-row justify-between">
-            <Text className="font-semibold text-stone-900">Purchase price</Text>
-            <Text className="font-semibold text-amber-800">${totalPrice.toFixed(2)}</Text>
+            <Text className="font-semibold text-stone-900 dark:text-stone-100">Purchase price</Text>
+            <Text className="font-semibold text-amber-800 dark:text-amber-300">${totalPrice.toFixed(2)}</Text>
           </View>
         </View>
       </View>

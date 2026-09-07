@@ -23,7 +23,7 @@ export function NumberInput({
 
   return (
     <TextInput
-      className="h-9 w-16 rounded-lg border border-stone-300 bg-white px-2 py-1 text-right text-sm text-stone-900"
+      className="h-9 w-16 rounded-lg border border-stone-300 bg-white px-2 py-1 text-right text-sm text-stone-900 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-100"
       value={draft}
       keyboardType="numeric"
       placeholder={placeholder}
@@ -49,7 +49,7 @@ export function NumberCell({
 }) {
   return (
     <View className="flex-1 items-center">
-      <Text className="mb-1 text-xs text-stone-500">{label}</Text>
+      <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">{label}</Text>
       <NumberInput value={value} onChange={onChange} placeholder={placeholder} />
     </View>
   );
@@ -59,7 +59,7 @@ export function TextCell({ label, value, onChange }: { label: string; value: str
   return (
     <InputRow label={label}>
       <TextInput
-        className="h-9 flex-1 rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm text-stone-900"
+        className="h-9 flex-1 rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm text-stone-900 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-100"
         value={value}
         placeholder={label}
         onChangeText={onChange}
@@ -71,7 +71,7 @@ export function TextCell({ label, value, onChange }: { label: string; value: str
 function InputRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <View className="mb-1">
-      <Text className="mb-1 text-xs text-stone-500">{label}</Text>
+      <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">{label}</Text>
       {children}
     </View>
   );

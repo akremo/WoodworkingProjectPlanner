@@ -18,7 +18,7 @@ export function ChipSelector<T extends string>({
 }) {
   return (
     <View>
-      {label ? <Text className="mb-1 text-xs text-stone-500">{label}</Text> : null}
+      {label ? <Text className="mb-1 text-xs text-stone-500 dark:text-stone-400">{label}</Text> : null}
       <View className="flex-row flex-wrap gap-2">
         {options.map((option) => {
           const active = option.value === value;
@@ -27,9 +27,9 @@ export function ChipSelector<T extends string>({
               key={option.value}
               onPress={() => onChange(option.value)}
               className={`rounded-full border px-3 py-1.5 ${
-                active ? "border-amber-600 bg-amber-600" : "border-stone-300 bg-white"
+                active ? "border-amber-600 bg-amber-600 dark:border-amber-400" : "border-stone-300 bg-white dark:border-stone-700 dark:bg-stone-900"
               }`}>
-              <Text className={`text-xs font-medium ${active ? "text-white" : "text-stone-700"}`}>{option.label}</Text>
+              <Text className={`text-xs font-medium ${active ? "text-white" : "text-stone-700 dark:text-stone-300"}`}>{option.label}</Text>
             </Pressable>
           );
         })}
