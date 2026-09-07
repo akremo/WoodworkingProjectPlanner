@@ -63,7 +63,15 @@ export default function LayoutScreen() {
   const resawKerf = settings.resawKerf;
   const [selected, setSelected] = useState<PlacedPart | null>(null);
 
-  const result = useMemo(() => optimizeCutList({ parts, stock, kerf, resawKerf }), [parts, stock, kerf, resawKerf]);
+  // The editors start new rows at 0 dimension, and the optimizer validates
+  // strictly — only feed it rows that are actually placeable.
+  const validParts = parts.filter((p) => p.quantity >= 1 && p.length > 0 && p.width > 0 && p.thickness > 0);
+  const validStock = stock.filter((s) => s.qty >= 1 && s.length > 0 && s.width > 0 && s.thickness > 0);
+
+  const result = useMemo(
+    () => optimizeCutList({ parts: validParts, stock: validStock, kerf, resawKerf }),
+    [validParts, validStock, kerf, resawKerf],
+  );
 
   const loaded = partsLoaded && stockLoaded;
   if (!loaded) return <View className="flex-1 bg-stone-50 p-4 dark:bg-stone-950"><Text className="text-stone-500 dark:text-stone-400">Loading…</Text></View>;
@@ -86,8 +94,13 @@ export default function LayoutScreen() {
         </View>
       </View>
       <Text className="mt-1 text-sm text-stone-500 dark:text-stone-400">Live layout of your Part List on your Stock. Tap a part for details.</Text>
+      {parts.length !== validParts.length || stock.length !== validStock.length ? (
+        <Text className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-400">
+          {parts.length - validParts.length} part{(parts.length - validParts.length) === 1 ? "" : "s"} and {stock.length - validStock.length} stock item{(stock.length - validStock.length) === 1 ? "" : "s"} with missing dimensions are being skipped.
+        </Text>
+      ) : null}
 
-      {parts.length === 0 || stock.length === 0 ? (
+      {validParts.length === 0 || validStock.length === 0 ? (
         <View className="mt-4 rounded-xl bg-white p-4 shadow-sm dark:bg-stone-900">
           <Text className="text-stone-600 dark:text-stone-300">Add parts to the Part List and items to Stock first — the optimizer runs on those.</Text>
         </View>
