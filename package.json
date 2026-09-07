@@ -9,6 +9,8 @@
   "scripts": {
     "dev:mobile": "pnpm --filter cutlist-planner-mobile start",
     "export:web": "pnpm --filter cutlist-planner-mobile export:web",
+    "dev:desktop": "pnpm --filter cutlist-planner-desktop desktop:dev",
+    "build:desktop": "pnpm --filter cutlist-planner-desktop desktop:build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm --filter @clpv/core test"
   }

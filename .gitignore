@@ -1,0 +1,27 @@
+# Node
+node_modules/
+*.tgz
+*.log
+
+# Build outputs
+dist/
+build/
+
+# Expo / React Native
+.expo/
+apps/mobile/ios/
+apps/mobile/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+apps/mobile/.expo/
+
+# Tauri
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+
+# Local-only files (never commit)
+AGENTS.md
+Ideas.md

@@ -50,7 +50,7 @@ Monorepo (pnpm workspaces, `nodeLinker: hoisted`):
 
 - `packages/core` — pure TypeScript, no React Native/Expo imports. Domain models, CSV in/out, units + board-ft math, cutting nesters (`nesting.ts`: sheet maxrects + board rip/crosscut, kerf & grain aware, planing & resawing of boards into thinner layers), photo math. Tested with Vitest (runs on the host).
 - `apps/mobile` — Expo SDK 57 + Expo Router + NativeWind v4 (Tailwind). One UI, four views (`src/app/{index,stock,layout,photo}.tsx`). Part List and Stock are live editors persisted via AsyncStorage (`usePersistedState`, shared in-memory store → real-time cross-tab updates); CSV export via expo-file-system + expo-sharing (share sheet on native, download on web); photo tracing via expo-image-picker. Rendering/annotation canvas via react-native-skia (planned with the ML/photo-refinement phases). Camera, file picker, and image picker via Expo modules.
-- `apps/desktop` — planned Tauri shell hosting the mobile app's `expo export -p web` output for native Windows/Linux installers. Not created yet.
+- `apps/desktop` — Tauri 2 shell hosting the mobile app's `expo export -p web` output (`apps/mobile/dist`) for native Linux/Windows/macOS installers. `src-tauri/tauri.conf.json` points `frontendDist` at the web export; `pnpm build:desktop` re-exports the web bundle then builds `.deb`/`.rpm`/`.AppImage`.
 
 ## Decision history
 

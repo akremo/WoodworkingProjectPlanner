@@ -1,0 +1,14 @@
+{
+  "name": "cutlist-planner-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "desktop:dev": "pnpm --filter cutlist-planner-mobile run export:web && pnpm dev",
+    "desktop:build": "pnpm --filter cutlist-planner-mobile run export:web && pnpm build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4"
+  }
+}

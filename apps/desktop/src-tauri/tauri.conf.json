@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "CutList Planner",
+  "version": "0.1.0",
+  "identifier": "com.kremo.cutlistplanner",
+  "build": {
+    "beforeDevCommand": "pnpm --filter cutlist-planner-mobile run export:web",
+    "beforeBuildCommand": "pnpm --filter cutlist-planner-mobile run export:web",
+    "frontendDist": "../../mobile/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "CutList Planner",
+        "width": 1200,
+        "height": 820,
+        "minWidth": 640,
+        "minHeight": 520,
+        "center": true,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Utility",
+    "shortDescription": "Cut-list planner and layout visualizer",
+    "longDescription": "Plan, optimize, and visualize cut lists from part and stock inventories."
+  }
+}
