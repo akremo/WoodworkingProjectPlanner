@@ -6,6 +6,10 @@ node_modules/
 # Build outputs
 dist/
 build/
+dist-windows/
+
+# Test artifacts (vagrant-test)
+test-report.md
 
 # Expo / React Native
 .expo/
